@@ -1,132 +1,21 @@
-const text =
-"fadilah lucu imuft baik hati dan tidak sombonk, INFO NILAI PKN 34 BOSSSS";
-
-let i = 0;
-
-function typing(){
-
-if(i < text.length){
-
-document.getElementById("typing").innerHTML += text.charAt(i);
-
-i++;
-
-setTimeout(typing,70);
-
-}
-
-}
-
-typing();
-
-document
-.getElementById("startBtn")
-.addEventListener("click",()=>{
-
-document
-.getElementById("loading-screen")
-.style.display="none";
-
-confetti({
-particleCount:200,
-spread:180
-});
-
-});
-
-
-const particles = [
-"images/bunga1.png",
-"images/bunga2.png",
-"images/bunga3.png",
-"images/hati.png",
-"images/bintang.png"
-];
-
-function createFlower(){
-
-const flower =
-document.createElement("img");
-
-flower.src =
-particles[Math.floor(Math.random()*particles.length)];
-
-flower.classList.add("flower");
-
-flower.style.left =
-Math.random()*100+"vw";
-
-flower.style.width =
-(25+Math.random()*20)+"px";
-
-flower.style.animationDuration =
-(6+Math.random()*8)+"s";
-
-document.body.appendChild(flower);
-
-setTimeout(()=>{
-flower.remove();
-},15000);
-
-}
-
-
-setInterval(createFlower,300);
-
-document
-.getElementById("surpriseBtn")
-.addEventListener("click",()=>{
-
-document
-.getElementById("popup")
-.style.display="flex";
-
-confetti({
-
-particleCount:300,
-spread:200,
-origin:{y:.6}
-
-});
-
-setTimeout(()=>{
-
-document
-.getElementById("popup")
-.style.display="none";
-
-},4000);
-
-});
-
-// ============================
-// LOADING SCREEN
-// ============================
-document.getElementById('startBtn').addEventListener('click', function () {
-  const loading = document.getElementById('loading-screen');
-  loading.style.transition = 'opacity 1s';
-  loading.style.opacity = '0';
-  setTimeout(() => { loading.style.display = 'none'; }, 1000);
-});
-
-// ============================
-// TYPING EFFECT
-// ============================
+// ================================
+//  TYPING — typewriter loop estetik
+// ================================
 const texts = [
-  "Happy Birthday, fadilah lucu imuft baik hati dan tidak sombonk 🎂",
-  "BTW TUTOR NILAI PKN 34 DONG🏆",
+  "Happy Birthday, Fadillah yang lucu, imut, baik hati & tidak sombong 🎂",
+  "btw tutor nilai PKN 34 dong 🏆",
   "Semoga hari-harimu penuh kebahagiaan 🎉",
-  "Semangat terus calon mahasiswa! 📚",
-  "Semoga impianmu segera tercapai ✨",
+  "Semangat terus calon mahasiswa impian! 📚",
+  "Semoga semua impianmu segera tercapai ✨",
 ];
 let textIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
-const typingEl = document.getElementById('typing');
+const typingEl = document.getElementById("typing");
 
 function type() {
+  if (!typingEl) return;
   const current = texts[textIndex];
-
   if (isDeleting) {
     typingEl.textContent = current.substring(0, charIndex--);
   } else {
@@ -135,74 +24,153 @@ function type() {
 
   if (!isDeleting && charIndex === current.length + 1) {
     isDeleting = true;
-    setTimeout(type, 1500); // pause sebelum hapus
+    setTimeout(type, 1600);
     return;
   }
-
   if (isDeleting && charIndex === 0) {
     isDeleting = false;
     textIndex = (textIndex + 1) % texts.length;
   }
-
-  setTimeout(type, isDeleting ? 40 : 80);
+  setTimeout(type, isDeleting ? 32 : 72);
 }
-
 type();
 
-// ============================
-// BUNGA JATUH
-// ============================
-const flowers = ['🌸', '🌺', '🌷', '💐', '🌼'];
+// ================================
+//  LOADING — open with confetti + fade
+// ================================
+const startBtn = document.getElementById("startBtn");
+const loadingScreen = document.getElementById("loading-screen");
 
-function createFlower() {
-  const flower = document.createElement('div');
-  flower.classList.add('flower');
-  flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
-  flower.style.left = Math.random() * 100 + 'vw';
-  flower.style.fontSize = (Math.random() * 20 + 15) + 'px';
-  flower.style.animationDuration = (Math.random() * 4 + 4) + 's';
-  flower.style.animationDelay = (Math.random() * 2) + 's';
-  document.body.appendChild(flower);
-  setTimeout(() => flower.remove(), 8000);
+if (startBtn && loadingScreen) {
+  startBtn.addEventListener("click", () => {
+    // confetti burst estetik
+    if (window.confetti) {
+      const colors = ["#ff7bac", "#ff4d8a", "#c9a86a", "#ffe4b8", "#ffffff"];
+      confetti({ particleCount: 120, spread: 90, origin: { y: 0.7 }, colors, scalar: 1.1 });
+      setTimeout(() => confetti({ particleCount: 80, spread: 120, origin: { y: 0.6 }, colors }), 280);
+    }
+    loadingScreen.style.transition = "opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1)";
+    loadingScreen.style.opacity = "0";
+    loadingScreen.style.transform = "scale(1.02)";
+    setTimeout(() => { loadingScreen.style.display = "none"; }, 900);
+  });
 }
 
-setInterval(createFlower, 600);
+// ================================
+//  FLOWERS — soft emoji fall (performance capped)
+// ================================
+const flowers = ["🌸", "🌷", "💮", "🌺", "💐", "🌼", "💗", "✨"];
+const flowerColors = ["#ff7bac", "#ffbfd6", "#e8c99a"];
 
-// ============================
-// SURPRISE BUTTON → JUMPSCARE
-// ============================
-const surpriseBtn = document.getElementById('surpriseBtn');
-const jumpscare   = document.getElementById('jumpscare');
-const video       = document.getElementById('jumpscareVideo');
-const popup       = document.getElementById('popup');
+function createFlower() {
+  const el = document.createElement("div");
+  el.className = "flower";
+  el.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+  el.style.left = Math.random() * 100 + "vw";
+  el.style.fontSize = (14 + Math.random() * 18) + "px";
+  el.style.animationDuration = (5 + Math.random() * 5) + "s";
+  el.style.animationDelay = Math.random() * 0.8 + "s";
+  el.style.opacity = String(0.55 + Math.random() * 0.45);
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 9500);
+}
+// slower + fewer on mobile
+const isMobile = window.matchMedia("(max-width: 640px)").matches;
+setInterval(createFlower, isMobile ? 900 : 560);
 
-surpriseBtn.addEventListener('click', function () {
-  // Tampilkan jumpscare fullscreen
-  jumpscare.style.display = 'flex';
-  video.currentTime = 0;
-  video.play();
-});
+// ================================
+//  SURPRISE — jumpscare -> popup -> confetti
+// ================================
+const surpriseBtn = document.getElementById("surpriseBtn");
+const jumpscare = document.getElementById("jumpscare");
+const video = document.getElementById("jumpscareVideo");
+const popup = document.getElementById("popup");
 
-// Setelah video selesai → munculkan popup birthday
-video.addEventListener('ended', function () {
-  jumpscare.style.display = 'none';
-  popup.style.display     = 'flex';
+function fireConfetti() {
+  if (!window.confetti) return;
+  const colors = ["#ff7bac", "#e94e7a", "#c9a86a", "#fff2b8", "#ffffff"];
+  confetti({ particleCount: 160, spread: 85, origin: { y: 0.68 }, colors, gravity: 0.9, scalar: 1.05 });
+  setTimeout(() => confetti({ particleCount: 110, spread: 120, origin: { y: 0.62 }, colors }), 260);
+  setTimeout(() => confetti({ particleCount: 70, spread: 160, origin: { y: 0.58 }, colors, scalar: 0.9 }), 520);
+}
 
-  // Popup hilang otomatis setelah 5 detik
-  setTimeout(() => { popup.style.display = 'none'; }, 5000);
-});
+function showPopup() {
+  if (!popup) return;
+  popup.style.display = "flex";
+  // trigger css animation
+  requestAnimationFrame(() => popup.classList.add("show"));
+  fireConfetti();
+  // auto hide 5.5s
+  clearTimeout(showPopup._t);
+  showPopup._t = setTimeout(() => hidePopup(), 5500);
+}
+function hidePopup() {
+  if (!popup) return;
+  popup.classList.remove("show");
+  setTimeout(() => { if (!popup.classList.contains("show")) popup.style.display = "none"; }, 300);
+}
 
-// Klik layar saat jumpscare = skip video
-jumpscare.addEventListener('click', function () {
-  video.pause();
-  jumpscare.style.display = 'none';
+if (surpriseBtn && jumpscare && video) {
+  surpriseBtn.addEventListener("click", () => {
+    jumpscare.classList.add("show");
+    jumpscare.style.display = "flex";
+    video.currentTime = 0;
+    video.muted = false;
+    const p = video.play();
+    if (p && p.catch) p.catch(() => { video.muted = true; video.play(); });
+  });
 
-  // Tetap munculkan popup meski di-skip
-  popup.style.display = 'flex';
-  setTimeout(() => { popup.style.display = 'none'; }, 5000);
-});
+  video.addEventListener("ended", () => {
+    jumpscare.classList.remove("show");
+    jumpscare.style.display = "none";
+    showPopup();
+  });
 
-// Klik popup untuk tutup manual
-popup.addEventListener('click', function () {
-  popup.style.display = 'none';
-});
+  jumpscare.addEventListener("click", () => {
+    video.pause();
+    jumpscare.classList.remove("show");
+    jumpscare.style.display = "none";
+    showPopup();
+  });
+}
+
+// popup click outside to close + close buttons
+if (popup) {
+  popup.addEventListener("click", (e) => {
+    if (e.target === popup) hidePopup();
+  });
+  // ESC to close
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && popup.style.display === "flex") hidePopup();
+  });
+}
+
+// ================================
+//  REVEAL ON SCROLL — intersection
+// ================================
+const reveals = document.querySelectorAll(".reveal");
+if ("IntersectionObserver" in window && reveals.length) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.14, rootMargin: "0px 0px -40px 0px" });
+  reveals.forEach((el) => io.observe(el));
+} else {
+  reveals.forEach((el) => el.classList.add("in"));
+}
+
+// ================================
+//  SMOOTH SCROLL FOR GHOST BUTTON + tiny parallax on hero
+// ================================
+const glassCard = document.querySelector(".glass-card");
+if (glassCard && !isMobile) {
+  document.addEventListener("mousemove", (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 10;
+    const y = (e.clientY / window.innerHeight - 0.5) * 8;
+    glassCard.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  });
+}
